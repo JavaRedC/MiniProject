@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soil Dryness Checker</title>
+    <title>Soil Dryness Result</title>
     <style>
         body {
-            font-family: Arial, sans-serif; background-image: url('https://i.pinimg.com/564x/e7/96/15/e79615969c0e30e79c83fbb7f1d71c98.jpg');
+            font-family: Arial, sans-serif;
+	     background-image: url('https://i.pinimg.com/564x/e7/96/15/e79615969c0e30e79c83fbb7f1d71c98.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat
-	    
             margin: 0;
             padding: 0;
             display: flex;
@@ -24,16 +24,21 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-        input {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
+        p {
+            font-size: 18px;
+        }
+        .result {
+            font-weight: bold;
+            font-size: 24px;
+            color: green;
+        }
+        .dry {
+            color: red;
         }
         button {
-            padding: 10px 130px;
+            padding: 10px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -45,17 +50,54 @@
     </style>
 </head>
 <body>
-	
+
     <div class="container">
-        <h1>Soil Dryness Checker</h1>
-	 <form id="soilForm" action="connect.php " method="get">
-	<label for="id">ID Number:</label>
-            <input type="number" id="id" name="id" required>        
-            <label for="region">Region:</label>
-            <input type="text" id="region" name="region" required>        
-        <input type="submit" value="Check your soil">
-        </form>
-        <button class="redirect-button" onclick="window.location.href='result.html';">Go to Results</button>
+        <h1>Soil Dryness Result</h1>
+        <p id="message"></p>
+        <p id="weather"></p>
+        <button onclick="window.history.back()">Go Back</button>
     </div>
+
+    <script>
+        // Get query parameters from the URL
+        const params = new URLSearchParams(window.location.search);
+        const idNumber = params.get('idNumber');
+        const region = params.get('region');
+
+        // Simulate soil dryness checking logic
+        const isSoilDry = Math.random() < 0.5; // Randomly decide if the soil is dry
+
+        const messageElement = document.getElementById('message');
+        const weatherElement = document.getElementById('weather');
+
+        // Simulate temperature and humidity based on region
+        const weatherData = {
+            "north": { temperature: 20, humidity: 50 },
+            "south": { temperature: 30, humidity: 40 },
+            "east": { temperature: 25, humidity: 60 },
+            "west": { temperature: 18, humidity: 70 }
+        };
+
+        let weatherInfo;
+
+        if (region.toLowerCase() in weatherData) {
+            weatherInfo = weatherData[region.toLowerCase()];
+        } else {
+            // Default data if region is not found
+            weatherInfo = { temperature: 22, humidity: 55 };
+        }
+
+        if (isSoilDry) {
+            messageElement.innerHTML = `Soil with ID <strong>${idNumber}</strong> in the <strong>${region}</strong> region is <span class="dry">dry</span>. It is recommended to water the soil.`;
+        } else {
+            messageElement.innerHTML = `Soil with ID <strong>${idNumber}</strong> in the <strong>${region}</strong> region is <span class="result">not dry</span>. Watering is not required.`;
+        }
+
+        weatherElement.innerHTML = `Current weather in <strong>${region}</strong>: Temperature is <strong>${weatherInfo.temperature}°C</strong> and Humidity is <strong>${weatherInfo.humidity}%</strong>.`;
+
+    </script>
+
 </body>
 </html>
+``
+
